@@ -416,67 +416,105 @@
 <div
     class="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center py-4 sm:pt-0">
     <div class="flex w-75" style="">
-        <div class="data-container w-50" style="overflow: scroll; overflow-x: hidden;overflow-y: auto; max-height: 525px;">
+        <div class="data-container w-50"
+             style="overflow: scroll; overflow-x: hidden;overflow-y: auto; max-height: 525px;">
             <h5>Produktu saraksts</h5>
             <!---------Product container----->
-            <div class="" >
-                <div class="accordion" id="accordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                ID: 0000 Nosaukums: Test
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                             data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <div class="form-group row justify-content-around ">
+            @foreach($products as $product)
 
-                                    <div class="align-middle"><label class="" for="id">ID:</label></div>
-                                    <input class="" type="number" name="id">
-                                    <label for="name">Nosaukums:</label>
-                                    <input type="text" class="" name="name">
+                <div class="">
+                    <form action="{{url('products/'.$product->id.'/update')}}" method="patch">
+                        @method('patch')
+
+                        <div class="accordion" id="accordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="heading{{$product->id}}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapse{{$product->id}}" aria-expanded="false"
+                                            aria-controls="collapse{{$product->id}}">
+                                        <div>ID: {{$product->productID}} Nosaukums: {{$product->name}}</div>
+
+                                    </button>
+                                </h2>
+                                <div id="collapse{{$product->id}}" class="accordion-collapse collapse"
+                                     aria-labelledby="heading{{$product->id}}"
+                                     data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div class="form-group row justify-content-around ">
+
+                                            <div class="align-middle"><label class="" for="id">ID:</label></div>
+                                            <input class="" type="number" name="productId" value="{{$product->productID}}">
+                                            {{$errors->has('productId') ? 'Lūdzu korekti aizpildiet id lauku':''}}
+                                            <label for="name">Nosaukums:</label>
+                                            <input type="text" class="" name="productName" value="{{$product->name}}">
+                                            {{$errors->has('productName') ? 'Lūdzu korekti aizpildiet nosaukuma lauku':''}}
+                                        </div>
+
+
+                                        <div class="form-group ">
+                                            <label class="m-1" for="category">Kategorija</label>
+                                            <br>
+                                            <select class=" w-100" name="productCategory" id="category">
+                                                <option value="none"
+                                                        {{$product->category_id == null?"selected":""}} disabled hidden>
+                                                    Izvēlēties kategoriju
+                                                </option>
+                                                <option
+                                                    value="1"{{$product->category_id == 1?"selected":""}}{{$product->category_id == null?"selected":""}}>
+                                                    Pārtika
+                                                </option>
+                                                <option value="2"{{$product->category_id == 2?"selected":""}}>
+                                                    Rotaļlietas
+                                                </option>
+                                                <option value="3"{{$product->category_id == 3?"selected":""}}>
+                                                    Drēbes
+                                                </option>
+                                                <option value="4"{{$product->category_id == 4?"selected":""}}>
+                                                    Mēbeles
+                                                </option>
+                                            </select>
+                                            {{$errors->has('productCategory') ? 'Lūdzu izvēlaties pieejamu kategoriju':''}}
+                                        </div>
+
+
+                                        <div class="form-group sm:text-left mt-2">
+                                            <input type="radio" id="{{$product->id}}warehouse1"
+                                                   name="{{$product->id}}warehouse"
+                                                   value="1" {{$product->warehouse_id == 1?"checked":""}}>
+                                            <label for="warehouse1">Imantas noliktava</label><br>
+                                            <input type="radio" id="{{$product->id}}warehouse2"
+                                                   name="{{$product->id}}warehouse"
+                                                   value="2" {{$product->warehouse_id == 2?"checked":""}}>
+                                            <label for="warehouse2">Teikas noliktava</label><br>
+                                            <input type="radio" id="{{$product->id}}warehouse3"
+                                                   name="{{$product->id}}warehouse"
+                                                   value="3" {{$product->warehouse_id == 3?"checked":""}}>
+                                            <label for="warehouse3">Jūrmalas noliktava</label><br>
+                                            <div>{{$errors->has($product->id.'warehouse') ? 'Lūdzu izvēlaties pieejamu noliktavu':''}}</div>
+
+
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="desc">Apraksts</label>
+                                            <br>
+                                            <textarea id="productDesc" name="productDesc">{{$product->desc}}</textarea>
+                                            {{$errors->has('productDesc') ? 'Lūdzu izveidojiet aprakstu':''}}
+                                        </div>
+
+                                        <input type="submit" value="Iesniegt">
+                                        <a href="{{ url('/products/' . $product->id . '/delete') }}">
+                                            <button type="button" class="m-1 btn btn-danger">Dzēst</button>
+                                        </a>
+                                    </div>
                                 </div>
-
-
-                                <div class="form-group ">
-                                    <label class="m-1" for="category">Kategorija</label>
-                                    <br>
-                                    <select class=" w-100" name="category" id="category">
-                                        <option value="none" selected disabled hidden>Izvēlēties kategoriju</option>
-                                        <option value="food">Pārtika</option>
-                                        <option value="toys">Rotaļlietas</option>
-                                        <option value="clothes">Drēbes</option>
-                                        <option value="furniture">Mēbeles</option>
-                                    </select>
-                                </div>
-
-
-                                <div class="form-group sm:text-left mt-2">
-                                    <input type="radio" id="warehouse1" name="warehouse" value="1">
-                                    <label for="warehouse1">Imantas noliktava</label><br>
-                                    <input type="radio" id="warehouse2" name="warehouse" value="2">
-                                    <label for="warehouse2">Teikas noliktava</label><br>
-                                    <input type="radio" id="warehouse3" name="warehouse" value="3">
-                                    <label for="warehouse3">Jūrmalas noliktava</label><br>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="desc">Apraksts</label>
-                                    <br>
-                                    <textarea id="desc"></textarea>
-                                </div>
-
-                                <input type="submit" value="Iesniegt">
                             </div>
+
                         </div>
-                    </div>
-
+                    </form>
                 </div>
-
-            </div>
-            <!---------Product container end-------->
+        @endforeach
+        <!---------Product container end-------->
         </div>
         <form class="input-form text-center" action="{{url('addProduct')}}" method="post">
             @csrf

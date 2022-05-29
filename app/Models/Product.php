@@ -10,11 +10,11 @@ class Product extends Model
     use HasFactory;
     public function categories()
     {
-        $this->hasOne(Category::class);
+       return $this->hasOne(Category::class);
     }
 
     public function warehouses()
     {
-        $this->hasOne(Warehouse::class);
+       return $this->hasOne(Warehouse::class);
     }
 }

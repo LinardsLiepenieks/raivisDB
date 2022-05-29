@@ -14,7 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome')->with('products', \App\Models\Product::all());
 });
 
 Route::post('addProduct', [\App\Http\Controllers\ProductsController::class, 'store']);
+Route::get('products/{id}/delete', [\App\Http\Controllers\ProductsController::class, 'delete']);
+Route::get('products/{id}/update', [\App\Http\Controllers\ProductsController::class, 'update']);
